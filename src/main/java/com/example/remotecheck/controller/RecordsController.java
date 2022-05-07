@@ -15,7 +15,7 @@ public class RecordsController {
 
     @PostMapping
     public Records setRecords(@RequestBody Records records) {
-        System.out.println(records);
+//        System.out.println(records);
         return repository.save(records);
     }
     @GetMapping("/all/{id}")

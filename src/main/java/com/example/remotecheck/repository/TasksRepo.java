@@ -35,6 +35,12 @@ public class TasksRepo {
         return tasks;
     }
 
+    @Transactional
+    public Tasks save(Tasks tasks) {
+        entityManager.persist(tasks);
+        return tasks;
+    }
+
 //    @Transactional
 //    public Records save(Records records) {
 //        if (records != null) {

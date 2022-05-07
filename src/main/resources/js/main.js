@@ -7,6 +7,7 @@ import router from 'router/router.js'
 import App from 'pages/app.vue'
 import 'vuetify/dist/vuetify.min.css'
 
+
 // Vue.use(Vuetify)
 /*"vuetify": "1.5.16"*/
 

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <h1>
-      Шапка сайта
+      Удаленное управление
     </h1>
     <v-content>
       <router-view></router-view>

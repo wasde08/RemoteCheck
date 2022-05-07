@@ -17,10 +17,13 @@ public class TasksController {
     @Autowired
     private TasksRepo repository;
 
+    @Autowired
+    private ClientsRepo clientsRepo;
+
 
     @GetMapping("/getTasksByClient/{key}")
     public List<Tasks> getNewKey(@PathVariable String key) {
-        System.out.println(key);
+//        System.out.println(key);
         List<Tasks> list = repository.findCommandsByKey(key);
 
         return list;
@@ -29,5 +32,12 @@ public class TasksController {
     public Tasks getNewKey(@RequestBody Tasks tasks) {
         tasks.setStatus(true);
         return repository.update(tasks);
+    }
+
+    @PostMapping("/newTask")
+    public Tasks newTask(@RequestBody Tasks tasks) {
+        Clients clients = clientsRepo.findById(tasks.getClients_id().getId());
+        tasks.setClients_id(clients);
+        return repository.save(tasks);
     }
 }

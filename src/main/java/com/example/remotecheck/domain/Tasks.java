@@ -2,8 +2,6 @@ package com.example.remotecheck.domain;
 
 import javax.persistence.*;
 
-import com.example.remotecheck.domain.Clients;
-
 @Entity
 public class Tasks {
     @Id
@@ -16,7 +14,7 @@ public class Tasks {
     @ManyToOne(cascade = CascadeType.MERGE)
     private Clients clients_id;
 
-    public Tasks( String command,boolean status, Clients clients_id) {
+    public Tasks(String command, boolean status, Clients clients_id) {
 
         this.command = command;
         this.clients_id = clients_id;

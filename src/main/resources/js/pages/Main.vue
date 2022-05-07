@@ -1,8 +1,19 @@
 <template>
   <div>
-<!--    <v-btn @click="getClient" style="position: absolute;top: 15%;left: 10%">-->
-<!--      Send-->
-<!--    </v-btn>-->
+    <div>
+      <v-alert
+          v-model="alertFlag"
+          border="left"
+          close-text="Close Alert"
+          color="deep-purple accent-4"
+          dark
+          dismissible
+      >
+        Сервер упал
+      </v-alert>
+    </div>
+
+
     <template>
       <v-simple-table>
         <template v-slot:default>
@@ -23,8 +34,9 @@
           <tr
               v-for="item in clients"
               :key="item.client.id"
+
           >
-            <td>{{ item.client.id }}</td>
+            <td @click="goTobyPage(item.client.id)">{{ item.client.id }}</td>
             <td>{{ item.client.key }}</td>
             <td>
               <div v-if="(new Date().getTime() - Date.parse(item.last.timestamp))<60000">
@@ -34,8 +46,6 @@
                 Off
               </div>
             </td>
-
-
           </tr>
           </tbody>
         </template>
@@ -43,10 +53,7 @@
     </template>
 
   </div>
-  <!--  <v-label>-->
-  <!--    Public key: {{ clientData }} <br>-->
 
-  <!--  </v-label>-->
 </template>
 
 <script>
@@ -57,10 +64,12 @@ export default {
     return {
 
       clients: [],
+      alertFlag: false,
+      alerts : new Map(),
 
     }
   },
-  created(){
+  created() {
 
   },
   methods: {
@@ -70,6 +79,13 @@ export default {
         result.data.forEach(data => {
           let obj = data
           client.getLast(obj.id).then(result2 => {
+            let x = new Date().getTime()
+            if (x - Date.parse(result2.data.timestamp) < 70000) {
+              if (x - Date.parse(result2.data.timestamp) > 60000) {
+                this.alertFlag = true
+                client.sendTel(obj.id)
+              }
+            }
             this.clients.push({
               "last": result2.data,
               "client": obj
@@ -78,9 +94,12 @@ export default {
         })
       })
       setTimeout(this.getClient, 10000);
-    }
+    },
+    goTobyPage(id) {
+      this.$router.push('/server/' + id)
+    },
   },
-  beforeMount(){
+  beforeMount() {
     this.getClient()
   },
 }

